@@ -10,7 +10,7 @@ var ObjectID = require('mongodb').ObjectID;
 var ExifImage = require('exif').ExifImage;
 var fs = require('fs');
 
-var mongourl = "mongodb://g1141464:g1141464@ds141474.mlab.com:41474/g1141464";
+var mongourl = "";
 
 var loginUser = {};
 
