@@ -1,0 +1,29 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Restaurant</title>
+  
+</head>
+
+
+<body>
+    <h1>Restaurants</h1>
+    <p>User: <%= user.userid %></p>
+    <p>Showing  <%= restaurant.length %> documents</p>
+    <a href="/new">
+        <button class="btn btn-default">Create New Restaurant</button>
+    </a>
+    <ol> 
+        <% for (var i in restaurant) { %>
+            <li><a href='/display?_id=<%= restaurant[i]._id %>'><%= restaurant[i].name %></a></li> 
+        <% } %>
+    </ol> 
+ 
+    
+</body>
+</html>
