@@ -15,20 +15,23 @@
          <h1>
             <%= p.name %>
          </h1>
-        <% if (p.image !== {}) { %>
+        <% if (p.image) { %>
             <img src="data:<%= p.mimetype %>;base64, <%= p.image %>">
         <% } else { %>
             <h2>No image</h2>
             <% } %>
         <p>Restaurant_id: <%= p.id%></p>
-        <p>borough: <%= p.borough%></p>
-        <p>cuisine: <%= p.cuisine%></p>
-        <p>address: 
-            <p>street: <%= p.address.street%></p>
-            <p>building: <%= p.address.building%></p>
-            <p>zipcode: <%= p.address.zipcode%></p>
-            <p>coord: <%= p.address.coord%></p>
+        <p>Borough: <%= p.borough%></p>
+        <p>Cuisine: <%= p.cuisine%></p>
+        <p>Address: 
+            <ul>
+            <li>street: <%= p.address.street%></li>
+            <li>building: <%= p.address.building%></li>
+            <li>zipcode: <%= p.address.zipcode%></li>
+            <li>coord: <%= p.address.coord%></li>
+            </ul>
         </p>
+        <p> Owner: <%= p.owner%></p>
         <h2>EXIF Data</h2>
         <% if ('exif' in p && Object.keys(p.exif).length !== 0) { %>
         <h3>Make/Model:

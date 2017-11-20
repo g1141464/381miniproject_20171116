@@ -9,10 +9,19 @@ var assert = require('assert');
 var ObjectID = require('mongodb').ObjectID;
 var ExifImage = require('exif').ExifImage;
 var fs = require('fs');
+var session = require('cookie-session');
 
-var mongourl = "";
+var mongourl = "mongodb://g1141464:g1141464@ds141474.mlab.com:41474/g1141464";
 
 var loginUser = {};
+
+var SECRETKEY1 = 'I want to pass COMPS381F';
+var SECRETKEY2 = 'Keep this to yourself';
+
+app.use(session({
+  name: 'session',
+  keys: [SECRETKEY1,SECRETKEY2]
+}));
 
 app.use(fileUpload());
 app.use(bodyParser());
@@ -20,8 +29,12 @@ app.use(bodyParser());
 app.listen(process.env.PORT || 8099);
 
 app.get('/new', function(req,res) {
-  res.status(200);
-  res.render("upload",{owner: loginUser.userid});
+  if (!req.session.authenticated) {
+		res.status(200);
+    res.render("login");
+	} else {
+        res.status(200);
+        res.render("upload",{owner: loginUser.userid});}
 });
 
 // app.get('/', function(req,res) {
@@ -29,8 +42,10 @@ app.get('/new', function(req,res) {
 // });
 
 app.get('/', function(req,res) {
-  res.status(200);
-  res.render("login");
+  if (!req.session.authenticated) {
+		res.status(200);
+    res.render("login");
+	} else {res.redirect('/read');}
 });
 
 app.post('/processlogin', function(req,res) {
@@ -49,28 +64,55 @@ app.post('/processlogin', function(req,res) {
     console.log('Connected to MongoDB\n');
     matchLogin(db,match,function(user) {
 			db.close();
-			console.log('Disconnected MongoDB\n');
+      console.log('Disconnected MongoDB\n');
+      console.log('aaa'+user);
 			if (user.length == 0) {
-				res.writeHead(500, {"Content-Type": "text/plain"});
-				res.end('User Not found!');
+        res.redirect('/logout');
 			} else {
-          MongoClient.connect(mongourl, function(err, db) {
-            assert.equal(err,null);
-            console.log('Connected to MongoDB\n');
-            findRestaurants(db,{},function(restaurants) {
-              db.close();
-              console.log('Disconnected MongoDB\n');
-              console.log(restaurants);
-              res.render("read", {user: match,
-                            restaurant: restaurants});
-              return(restaurants);
-              });
-          });
+          req.session.authenticated = true;
+			    req.session.userid = loginUser.userid;
+          // MongoClient.connect(mongourl, function(err, db) {
+          //   assert.equal(err,null);
+          //   console.log('Connected to MongoDB\n');
+          //   findRestaurants(db,{},function(restaurants) {
+          //     db.close();
+          //     console.log('Disconnected MongoDB\n');
+          //     console.log('No. of restaurants = '+restaurants.length);
+          //     res.render("read", {user: match,
+          //                   restaurant: restaurants});
+          //     return(restaurants);
+          //     });
+          // });
+          res.redirect('/read');
       }
 
 			
 		}); 
 })});
+
+app.get('/read', function(req,res) {
+  if (!req.session.authenticated) {
+		res.status(200);
+    res.render("login");
+	} else {
+  MongoClient.connect(mongourl, function(err, db) {
+            assert.equal(err,null);
+            console.log('Connected to MongoDB\n');
+            findRestaurants(db,{},function(restaurants) {
+              db.close();
+              console.log('Disconnected MongoDB\n');
+              console.log('No. of restaurants = '+restaurants.length);
+              res.render("read", {user: loginUser,
+                            restaurant: restaurants});
+              return(restaurants);
+              });
+          });}
+});
+
+app.get('/logout',function(req,res) {
+	req.session = null;
+	res.redirect('/');
+});
 
 app.get('/createAC', function(req,res) {
   res.status(200);
@@ -94,6 +136,10 @@ app.post('/processcreateac', function(req,res) {
 })})});
 
 app.get('/photos', function(req,res) {
+  if (!req.session.authenticated) {
+		res.status(200);
+    res.render("login");
+	} else {
   console.log('/photos');
   MongoClient.connect(mongourl, function(err,db) {
     assert.equal(err,null);
@@ -104,10 +150,14 @@ app.get('/photos', function(req,res) {
       res.status(200);
       res.render("list",{p:photos});
     })
-  });
+  });}
 });
 
 app.post('/fileupload', function(req,res) {
+  if (!req.session.authenticated) {
+		res.status(200);
+    res.render("login");
+	} else {
   if (req.files.filetoupload) var filename = req.files.filetoupload.name;
   var name = (req.body.name.length > 0) ? req.body.name : "untitled";
   if (req.files.filetoupload) var mimetype = req.files.filetoupload.mimetype;
@@ -124,6 +174,7 @@ app.post('/fileupload', function(req,res) {
     if (req.body.coord) address['coord'] = req.body.coord;
 		new_r['address'] = address;
   }
+  new_r['owner'] = loginUser.userid;
 
   console.log(new_r);
   console.log("filename = " + filename);
@@ -168,9 +219,13 @@ app.post('/fileupload', function(req,res) {
         res.end('Restaurant was inserted into MongoDB!');})
   })
   }
-});
+}});
 
 app.get('/display', function(req,res) {
+  if (!req.session.authenticated) {
+		res.status(200);
+    res.render("login");
+	} else {
   MongoClient.connect(mongourl, function(err,db) {
     assert.equal(err,null);
     console.log('Connected to MongoDB');
@@ -202,7 +257,7 @@ app.get('/display', function(req,res) {
       res.status(200);
       res.render("photo",{p:restaurants[0],lat:lat,lon:lon});
     });
-  });
+  });}
 });
 
 app.get('/map', function(req,res) {

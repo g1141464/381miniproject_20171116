@@ -7,7 +7,8 @@
 		"exif": "0.6",
 		"express": "*",
 		"express-fileupload": "latest",
-		"mongodb": "*"
+		"mongodb": "*",
+		"cookie-session": "*"
 	},
 	"scripts": {
 		"start": "node server.js"

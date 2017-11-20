@@ -15,9 +15,12 @@
     <h1>Restaurants</h1>
     <p>User: <%= user.userid %></p>
     <p>Showing  <%= restaurant.length %> documents</p>
-    <a href="/new">
+    <p><a href="/new">
         <button class="btn btn-default">Create New Restaurant</button>
-    </a>
+    </a></p>
+    <p><a href="/logout">
+        <button class="btn btn-default">Logout</button>
+    </a></p>
     <ol> 
         <% for (var i in restaurant) { %>
             <li><a href='/display?_id=<%= restaurant[i]._id %>'><%= restaurant[i].name %></a></li> 
