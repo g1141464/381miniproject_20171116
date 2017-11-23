@@ -1,0 +1,26 @@
+<!DOCTYPE html><html>
+    <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Update restaurants - <%= p.name%></title>
+    </head>
+    <body>
+    <form action="processedit" method="post" enctype="multipart/form-data">
+        <input type="hidden" name="id" value="<%= p._id%>">
+    Name: <input type="text" name="name" minlength=1 required value="<%=p.name%>"><br>
+    borough: <input type="text" name="borough"  value="<%=p.borough%>"><br>
+    cuisine: <input type="text" name="cuisine"  value="<%=p.cuisine%>"><br>
+    address: <br>
+    street: <input type="text" name="street"  value="<%=p.address.street%>"><br>
+    building: <input type="text" name="building" value="<%=p.address.building%>"><br>
+    zipcode: <input type="text" name="zipcode"  value="<%=p.address.zipcode%>"><br>
+    GPS Coordinates (lon.): <input type="number" step="any" name="coordlon"  value="<%=p.gps.coordlon%>"><br>
+    GPS Coordinates (lat.): <input type="number" step="any" name="coordlat"  value="<%=p.gps.coordlat%>"><br>
+    <input type="hidden" name="owner" value=<%= owner%>><br>
+    Change photo: <input type="file" name="filetoupload"><br>
+    <input type="submit" value="Update">
+    </form>
+    <p><a href="/read"><button class="btn btn-default">Go Back</button></a></p>
+   
+
+    </body></html>    
+    

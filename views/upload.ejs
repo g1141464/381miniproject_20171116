@@ -5,7 +5,6 @@
 </head>
 <body>
 <form action="fileupload" method="post" enctype="multipart/form-data">
-Restaurant_id: <input type="text" name="id"  ><br>
 Name: <input type="text" name="name" minlength=1 required><br>
 borough: <input type="text" name="borough"  ><br>
 cuisine: <input type="text" name="cuisine"  ><br>
@@ -13,11 +12,12 @@ address: <br>
 street: <input type="text" name="street"  ><br>
 building: <input type="text" name="building" ><br>
 zipcode: <input type="text" name="zipcode"  ><br>
-coord: <input type="text" name="coord"  ><br>
+GPS Coordinates (lon.): <input type="number" step="any" name="coordlon"  ><br>
+GPS Coordinates (lat.): <input type="number" step="any" name="coordlat"  ><br>
 <input type="hidden" name="user" value=""><br>
 <input type="hidden" name="score" value=""><br>
 <input type="hidden" name="owner" value=<%= owner%>><br>
-<input type="file" name="filetoupload"><br>
+Photo :<input type="file" name="filetoupload"><br>
 <input type="submit">
 </form>
 </body></html>    
