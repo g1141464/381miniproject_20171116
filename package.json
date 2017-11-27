@@ -1,6 +1,7 @@
 {
-	"name": "photos",
-	"description": "COMPS381F - Base64 Example",
+	"name": "miniproject",
+	"description": "COMPS381F - MiniProject",
+	"author": "Kenny LAI WAI FUNG <s1141464@ouhk.edu.hk>",
 	"version": "1.0.0",
 	"dependencies": {
 		"ejs": "*",
@@ -8,7 +9,8 @@
 		"express": "*",
 		"express-fileupload": "latest",
 		"mongodb": "*",
-		"cookie-session": "*"
+		"cookie-session": "*",
+		"body-parser": "*"
 	},
 	"scripts": {
 		"start": "node server.js"

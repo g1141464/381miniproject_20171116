@@ -7,7 +7,7 @@ var fileUpload = require('express-fileupload');
 var MongoClient = require('mongodb').MongoClient;
 var assert = require('assert');
 var ObjectID = require('mongodb').ObjectID;
-var ExifImage = require('exif').ExifImage;
+// var ExifImage = require('exif').ExifImage;
 var fs = require('fs');
 var session = require('cookie-session');
 
@@ -131,24 +131,6 @@ app.post('/processcreateac', function(req,res) {
   res.redirect('/');
 })})});
 
-app.get('/photos', function(req,res) {
-  if (!req.session.authenticated) {
-		res.status(200);
-    res.render("login");
-	} else {
-  console.log('/photos');
-  MongoClient.connect(mongourl, function(err,db) {
-    assert.equal(err,null);
-    console.log('Connected to MongoDB');
-    findPhoto(db,{},{_id:1,title:1},function(photos) {
-      db.close();
-      console.log('Disconnected MongoDB');
-      res.status(200);
-      res.render("list",{p:photos});
-    })
-  });}
-});
-
 app.post('/fileupload', function(req,res) {
   if (!req.session.authenticated  ||loginUser.userid == null) {
 		res.redirect('/logout');
@@ -176,7 +158,6 @@ app.post('/fileupload', function(req,res) {
 
   console.log(new_r);
   console.log("filename = " + filename);
-  //
   
   var image = {};
   if (filename) image['image'] = filename;
@@ -185,18 +166,17 @@ app.post('/fileupload', function(req,res) {
     MongoClient.connect(mongourl,function(err,db) {
       new_r['mimetype'] = mimetype;
       new_r['image'] = new Buffer(data).toString('base64');
-      //new_r['exif'] = exif;
       insertRestaurants(db,new_r,function(result) {
         db.close();
         res.status(200);
-        res.write('Restaurant was inserted into MongoDB!');
-        res.end('<a href="/read"><button class="btn btn-default">Go Back</button></a></body>');
+        var mes =[];
+        mes[0] = 'Restaurant was inserted into MongoDB!';
+        res.render("message",{m:mes});
       })
     });
   })}
   else{MongoClient.connect(mongourl,function(err,db) {
       new_r['image'] = image;
-      //new_r['exif'] = exif;
       insertRestaurants(db,new_r,function(result) {
         db.close();
         res.redirect('/');})
@@ -217,7 +197,6 @@ app.get('/display', function(req,res) {
       db.close();
       console.log('Disconnected MongoDB');
       console.log('Photo returned = ' + restaurants.length);
-      //if(restaurants[0].exif.gps) console.log('GPS = ' + JSON.stringify(restaurants[0].exif.gps));
       var lat = -1;
       var lon = -1;
       if (restaurants[0].gps.coordlon) lon = restaurants[0].gps.coordlon;
@@ -227,7 +206,7 @@ app.get('/display', function(req,res) {
       console.log(restaurants[0].gps.coordlat, restaurants[0].gps.coordlon);  
       //console.log(restaurants[0]); 
       res.status(200);
-      res.render("photo",{p:restaurants[0],lat:lat,lon:lon});
+      res.render("display",{p:restaurants[0],lat:lat,lon:lon});
     });
   });}
 });
@@ -261,11 +240,10 @@ app.get('/rate', function(req,res) {
     console.log('id = '+restaurants[0]._id);
     console.log(rated);
     if(rated){
-      res.writeHead(200, {"Content-Type": "text/html"});
-      res.write('<body>');
-      res.write('<h1>User: '+loginUser.userid+' rated this restaurant!!!</h1><br>');
-      res.end('<a href="/read"><button class="btn btn-default">Go Back</button></a></body>');
-    }
+      var mes =[];
+      mes[0] = 'User: '+loginUser.userid+' rated this restaurant!!!';
+      res.render("message",{m:mes});
+      }
     else {res.render('rateR.ejs',
              {p : restaurants[0],
               owner : loginUser.userid});}
@@ -313,12 +291,11 @@ app.get('/edit', function(req,res) {
       }
     console.log('id = '+restaurants[0]._id);
     if(!isowner){
-      res.writeHead(200, {"Content-Type": "text/html"});
-      res.write('<body>');
-      res.write('<h1>User: '+loginUser.userid+' is not the owner of this restaurant!!!</h1><br>');
-      res.write('<p>A restaurant can only be updated by its owner (i.e. the user who created the restaurant)</p><br>');
-      res.end('<a href="/read"><button class="btn btn-default">Go Back</button></a></body>');
-    }
+      var mes =[];
+      mes[0] = 'User: '+loginUser.userid+' is not the owner of this restaurant!!!';
+      mes[1] = 'A restaurant can only be updated by its owner (i.e. the user who created the restaurant)';
+      res.render("message",{m:mes});
+     }
     else {res.render('update.ejs',
              {p : restaurants[0],
               owner : loginUser.userid});}
@@ -364,10 +341,10 @@ app.post('/processedit', function(req,res) {
       console.log('Preparing update: ' + JSON.stringify(edititem));
       updateRestaurant(db,criteria,edititem,function(result) {
         db.close();
-        res.writeHead(200, {"Content-Type": "text/html"});
-        res.write("<body><h1>update was successful!</h1><br>");
-        res.end('<a href="/read"><button class="btn btn-default">Go Back</button></a></body>');			
-      });
+        var mes =[];
+        mes[0] = 'update was successful!';
+        res.render("message",{m:mes});
+        });
     });
   }
 });
@@ -391,12 +368,11 @@ app.get('/delete', function(req,res) {
       }
     console.log('id going to delete = '+restaurants[0]._id);
     if(!isowner){
-      res.writeHead(200, {"Content-Type": "text/html"});
-      res.write('<body>');
-      res.write('<h1>User: '+loginUser.userid+' is not the owner of this restaurant!!!</h1><br>');
-      res.write('<p>A restaurant can only be deleted by its owner (i.e. the user who created the restaurant)</p><br>');
-      res.end('<a href="/read"><button class="btn btn-default">Go Back</button></a></body>');
-    }
+      var mes =[];
+      mes[0] = 'User: '+loginUser.userid+' is not the owner of this restaurant!!!';
+      mes[1] = 'A restaurant can only be deleted by its owner (i.e. the user who created the restaurant)';
+      res.render("message",{m:mes});
+      }
     else {
       MongoClient.connect(mongourl,function(err,db) {
         assert.equal(err,null);
@@ -404,10 +380,10 @@ app.get('/delete', function(req,res) {
         deleteRestaurant(db,criteria,function(result) {
           db.close();
           console.log(JSON.stringify(result));			
-          res.writeHead(200, {"Content-Type": "text/html"});
-          res.write('<body><h1>delete was successful!</h1><br>');
-          res.end('<a href="/read"><button class="btn btn-default">Go Back</button></a></body>');
-        });
+          var mes =[];
+          mes[0] = 'delete was successful!';
+          res.render("message",{m:mes});
+          });
       });
     }
              })})}
@@ -449,7 +425,7 @@ app.post('/processsearch', function(req,res) {
         console.log('Disconnected MongoDB');
         console.log('restaurants returned = ' + restaurants.length);
         res.status(200);
-        res.render('searchresult.ejs',{p:restaurants});
+        res.render('searchresult.ejs',{p:restaurants, c:JSON.stringify(searchitem)});
       });
     });
   }
@@ -471,19 +447,6 @@ function deleteRestaurant(db,criteria,callback) {
     console.log("delete was successful!");
     console.log(JSON.stringify(result));
     callback(result);
-  });
-}
-
-function findPhoto(db,criteria,fields,callback) {
-  var cursor = db.collection("restaurants").find(criteria);
-  var photos = [];
-  cursor.each(function(err,doc) {
-    assert.equal(err,null);
-    if (doc != null) {
-      photos.push(doc);
-    } else {
-      callback(photos);
-    }
   });
 }
 
@@ -542,14 +505,10 @@ function updateRestaurant(db,criteria,edititem,callback) {
 	});
 }
 
-//RESTful Part/////////////////////////////////////////////////////////////////////////////////////
-//RESTful Part/////////////////////////////////////////////////////////////////////////////////////
-//RESTful Part/////////////////////////////////////////////////////////////////////////////////////
-app.get('/api/restaurant/read/name*?/:name*?/borough*?/:borough*?/cuisine*?/:cuisine*?', function(req,res) {
+//RESTful Part//////////////////////////////////////////////////////////////////////////////////////////////
+
+app.get('/api/restaurant/read', function(req,res) {
   var item = {};
-  if (req.params.name) item['name'] = req.params.name;
-  if (req.params.borough) item['borough'] = req.params.borough;
-  if (req.params.cuisine) item['cuisine'] = req.params.cuisine;
   console.log(JSON.stringify(item));
   MongoClient.connect(mongourl, function(err,db) {
     assert.equal(err,null);
@@ -676,8 +635,9 @@ app.get('/api/restaurant/read/borough/:borough/cuisine/:cuisine', function(req,r
   });
 });
 
-app.get('/api/restaurant/read', function(req,res) {
+app.get('/api/restaurant/read/owner/:owner', function(req,res) {
   var item = {};
+  item['owner'] = req.params.owner;
   console.log(JSON.stringify(item));
   MongoClient.connect(mongourl, function(err,db) {
     assert.equal(err,null);
@@ -694,5 +654,93 @@ app.get('/api/restaurant/read', function(req,res) {
 });
 
 
+
+// app.get('/api/restaurant/read/:sitem', function(req,res) {
+//   var readitem = [];
+//   var str = req.params.sitem;
+//   var readitem = str.split("/");
+//   var item = {};
+//    for (var i=0;i< readitem.length;i++){
+//     if (readitem[i] == 'id')item['id'] =readitem[i+1];
+//     if (readitem[i] == 'name')item['name'] = readitem[i+1];
+//     if (readitem[i] == 'borough')item['borough'] = readitem[i+1];
+//     if (readitem[i] == 'cuisine')item['cuisine'] = readitem[i+1];
+//     var address = {};
+//     if (readitem[i] == 'building')address['building'] = readitem[i+1];
+//     if (readitem[i] == 'street')address['street'] = readitem[i+1];
+//     if (readitem[i] == 'zipcode')address['zipcode'] = readitem[i+1];
+//     if (address)item['address'] = address;
+//     var gps ={};
+//     if (readitem[i] == 'coordlon')gps['coordlon'] = readitem[i+1];
+//     if (readitem[i] == 'coordlat')gps['coordlat'] = readitem[i+1];
+//     if (gps)item['gps'] = gps;
+//     if (readitem[i] == 'owner')item['owner'] = readitem[i+1];
+//    }
+//   console.log(JSON.stringify(item));
+//   MongoClient.connect(mongourl, function(err,db) {
+//     assert.equal(err,null);
+//     console.log('Connected to MongoDB');
+//     findRestaurants(db,item,function(restaurants) {
+//       db.close();
+//       console.log('Disconnected MongoDB');
+//       console.log('restaurants returned = ' + restaurants.length);
+    	
+//         res.status(200).json(restaurants);
+
+//     });
+//   });
+// });
+
+app.post('/api/restaurant/create', function(req,res) {
+  var new_r = {};
+  if (req.files.filetoupload) var filename = req.files.filetoupload.name;
+  new_r['id'] = Date.now().toString();
+  if (req.body.name) {new_r['name'] = req.body.name;}
+  else {new_r['name'] = 'Created Without Name';}
+	new_r['borough'] = req.body.borough;
+	new_r['cuisine'] = req.body.cuisine;
+	var address = {};
+	address['building'] = req.body.building;
+  address['street'] = req.body.street;
+  address['zipcode'] = req.body.zipcode;
+  new_r['address'] = address;
+  var gps ={};
+  gps['coordlon'] = req.body.coordlon;
+  gps['coordlat'] = req.body.coordlat;
+  new_r['gps'] = gps;
+  var grade =[];
+  new_r['grade']=grade;
+  if (req.body.name) {new_r['owner'] = req.body.owner;}
+  else {new_r['owner'] = 'UnknownOwner';}
+  var image = {};
+  if (filename) image['image'] = filename;
+  if (filename){
+  fs.readFile(filename, function(err,data) {
+      new_r['mimetype'] = mimetype;
+      new_r['image'] = new Buffer(data).toString('base64');
+      });}
+  console.log(JSON.stringify(new_r));
+  MongoClient.connect(mongourl,function(err,db) {
+    new_r['image'] = image;
+    insertRestaurants(db,new_r,function(result) {
+      db.close();
+      //console.log(result);
+      if (result.insertedId){
+        res.send({
+          status: "ok",
+          _id: ObjectID(result.insertedId)
+        });
+      } else{
+        res.send({
+          status: "failed"
+        });
+      }
+    })
+});
+});
+
+app.use(function(req, res) {
+  res.status(404).send({url: req.originalUrl + ' not found'})
+});
 
 //server.listen(process.env.PORT || 8099);

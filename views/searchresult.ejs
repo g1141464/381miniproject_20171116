@@ -3,13 +3,14 @@
 <body>
   <H1>Search Result</H1> 
   <% if (p.length !=0) {%>
-<H2>Showing <%= p.length %> document(s)</H2> 
+<H2>Showing <%= p.length %> restaurant(s)</H2> 
 <ol> 
 <% for (var i in p) { %>
   <li><a href='/display?_id=<%= p[i]._id %>'><%= p[i].name %></a></li> 
 <% } %>
 </ol> <%} else { %>
   <h1>restaurant with following criteria not found!!!</h1>
+  <p><%=c%></p>
   <%}%>
 <a href="/read">
   <button class="btn btn-default">Go Back</button>
