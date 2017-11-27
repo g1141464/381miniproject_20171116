@@ -524,9 +524,9 @@ app.get('/api/restaurant/read', function(req,res) {
   });
 });
 
-app.get('/api/restaurant/read/name/:name', function(req,res) {
+app.get('/api/restaurant/read/:c1/:cv1', function(req,res) {
   var item = {};
-  item['name'] = req.params.name;
+  item[req.params.c1] = req.params.cv1;
   console.log(JSON.stringify(item));
   MongoClient.connect(mongourl, function(err,db) {
     assert.equal(err,null);
@@ -542,9 +542,10 @@ app.get('/api/restaurant/read/name/:name', function(req,res) {
   });
 });
 
-app.get('/api/restaurant/read/borough/:borough', function(req,res) {
+app.get('/api/restaurant/read/:c1/:cv1/:c2/:cv2', function(req,res) {
   var item = {};
-  item['borough'] = req.params.borough;
+  item[req.params.c1] = req.params.cv1;
+  item[req.params.c2] = req.params.cv2;
   console.log(JSON.stringify(item));
   MongoClient.connect(mongourl, function(err,db) {
     assert.equal(err,null);
@@ -560,9 +561,11 @@ app.get('/api/restaurant/read/borough/:borough', function(req,res) {
   });
 });
 
-app.get('/api/restaurant/read/cuisine/:cuisine', function(req,res) {
+app.get('/api/restaurant/read/:c1/:cv1/:c2/:cv2/:c3/:cv3', function(req,res) {
   var item = {};
-  item['cuisine'] = req.params.cuisine;
+  item[req.params.c1] = req.params.cv1;
+  item[req.params.c2] = req.params.cv2;
+  item[req.params.c3] = req.params.cv3;
   console.log(JSON.stringify(item));
   MongoClient.connect(mongourl, function(err,db) {
     assert.equal(err,null);
@@ -578,10 +581,12 @@ app.get('/api/restaurant/read/cuisine/:cuisine', function(req,res) {
   });
 });
 
-app.get('/api/restaurant/read/name/:name/borough/:borough', function(req,res) {
+app.get('/api/restaurant/read/:c1/:cv1/:c2/:cv2/:c3/:cv3/:c4/:cv4', function(req,res) {
   var item = {};
-  item['name'] = req.params.name;
-  item['borough'] = req.params.borough;
+  item[req.params.c1] = req.params.cv1;
+  item[req.params.c2] = req.params.cv2;
+  item[req.params.c3] = req.params.cv3;
+  item[req.params.c4] = req.params.cv4;
   console.log(JSON.stringify(item));
   MongoClient.connect(mongourl, function(err,db) {
     assert.equal(err,null);
@@ -597,10 +602,13 @@ app.get('/api/restaurant/read/name/:name/borough/:borough', function(req,res) {
   });
 });
 
-app.get('/api/restaurant/read/name/:name/cuisine/:cuisine', function(req,res) {
+app.get('/api/restaurant/read/:c1/:cv1/:c2/:cv2/:c3/:cv3/:c4/:cv4/:c5/:cv5', function(req,res) {
   var item = {};
-  item['name'] = req.params.name;
-  item['cuisine'] = req.params.cuisine;
+  item[req.params.c1] = req.params.cv1;
+  item[req.params.c2] = req.params.cv2;
+  item[req.params.c3] = req.params.cv3;
+  item[req.params.c4] = req.params.cv4;
+  item[req.params.c5] = req.params.cv5;
   console.log(JSON.stringify(item));
   MongoClient.connect(mongourl, function(err,db) {
     assert.equal(err,null);
@@ -616,10 +624,14 @@ app.get('/api/restaurant/read/name/:name/cuisine/:cuisine', function(req,res) {
   });
 });
 
-app.get('/api/restaurant/read/borough/:borough/cuisine/:cuisine', function(req,res) {
+app.get('/api/restaurant/read/:c1/:cv1/:c2/:cv2/:c3/:cv3/:c4/:cv4/:c5/:cv5/:c6/:cv6', function(req,res) {
   var item = {};
-  item['borough'] = req.params.borough;
-  item['cuisine'] = req.params.cuisine;
+  item[req.params.c1] = req.params.cv1;
+  item[req.params.c2] = req.params.cv2;
+  item[req.params.c3] = req.params.cv3;
+  item[req.params.c4] = req.params.cv4;
+  item[req.params.c5] = req.params.cv5;
+  item[req.params.c6] = req.params.cv6;
   console.log(JSON.stringify(item));
   MongoClient.connect(mongourl, function(err,db) {
     assert.equal(err,null);
@@ -635,9 +647,15 @@ app.get('/api/restaurant/read/borough/:borough/cuisine/:cuisine', function(req,r
   });
 });
 
-app.get('/api/restaurant/read/owner/:owner', function(req,res) {
+app.get('/api/restaurant/read/:c1/:cv1/:c2/:cv2/:c3/:cv3/:c4/:cv4/:c5/:cv5/:c6/:cv6/:c7/:cv7', function(req,res) {
   var item = {};
-  item['owner'] = req.params.owner;
+  item[req.params.c1] = req.params.cv1;
+  item[req.params.c2] = req.params.cv2;
+  item[req.params.c3] = req.params.cv3;
+  item[req.params.c4] = req.params.cv4;
+  item[req.params.c5] = req.params.cv5;
+  item[req.params.c6] = req.params.cv6;
+  item[req.params.c7] = req.params.cv7;
   console.log(JSON.stringify(item));
   MongoClient.connect(mongourl, function(err,db) {
     assert.equal(err,null);
@@ -653,43 +671,56 @@ app.get('/api/restaurant/read/owner/:owner', function(req,res) {
   });
 });
 
-
-
-// app.get('/api/restaurant/read/:sitem', function(req,res) {
-//   var readitem = [];
-//   var str = req.params.sitem;
-//   var readitem = str.split("/");
-//   var item = {};
-//    for (var i=0;i< readitem.length;i++){
-//     if (readitem[i] == 'id')item['id'] =readitem[i+1];
-//     if (readitem[i] == 'name')item['name'] = readitem[i+1];
-//     if (readitem[i] == 'borough')item['borough'] = readitem[i+1];
-//     if (readitem[i] == 'cuisine')item['cuisine'] = readitem[i+1];
-//     var address = {};
-//     if (readitem[i] == 'building')address['building'] = readitem[i+1];
-//     if (readitem[i] == 'street')address['street'] = readitem[i+1];
-//     if (readitem[i] == 'zipcode')address['zipcode'] = readitem[i+1];
-//     if (address)item['address'] = address;
-//     var gps ={};
-//     if (readitem[i] == 'coordlon')gps['coordlon'] = readitem[i+1];
-//     if (readitem[i] == 'coordlat')gps['coordlat'] = readitem[i+1];
-//     if (gps)item['gps'] = gps;
-//     if (readitem[i] == 'owner')item['owner'] = readitem[i+1];
-//    }
-//   console.log(JSON.stringify(item));
-//   MongoClient.connect(mongourl, function(err,db) {
-//     assert.equal(err,null);
-//     console.log('Connected to MongoDB');
-//     findRestaurants(db,item,function(restaurants) {
-//       db.close();
-//       console.log('Disconnected MongoDB');
-//       console.log('restaurants returned = ' + restaurants.length);
+app.get('/api/restaurant/read/:c1/:cv1/:c2/:cv2/:c3/:cv3/:c4/:cv4/:c5/:cv5/:c6/:cv6/:c7/:cv7/:c8/:cv8', function(req,res) {
+  var item = {};
+  item[req.params.c1] = req.params.cv1;
+  item[req.params.c2] = req.params.cv2;
+  item[req.params.c3] = req.params.cv3;
+  item[req.params.c4] = req.params.cv4;
+  item[req.params.c5] = req.params.cv5;
+  item[req.params.c6] = req.params.cv6;
+  item[req.params.c7] = req.params.cv7;
+  item[req.params.c8] = req.params.cv8;
+  console.log(JSON.stringify(item));
+  MongoClient.connect(mongourl, function(err,db) {
+    assert.equal(err,null);
+    console.log('Connected to MongoDB');
+    findRestaurants(db,item,function(restaurants) {
+      db.close();
+      console.log('Disconnected MongoDB');
+      console.log('restaurants returned = ' + restaurants.length);
     	
-//         res.status(200).json(restaurants);
+        res.status(200).json(restaurants);
 
-//     });
-//   });
-// });
+    });
+  });
+});
+
+app.get('/api/restaurant/read/:c1/:cv1/:c2/:cv2/:c3/:cv3/:c4/:cv4/:c5/:cv5/:c6/:cv6/:c7/:cv7/:c8/:cv8/:c9/:cv9', function(req,res) {
+  var item = {};
+  item[req.params.c1] = req.params.cv1;
+  item[req.params.c2] = req.params.cv2;
+  item[req.params.c3] = req.params.cv3;
+  item[req.params.c4] = req.params.cv4;
+  item[req.params.c5] = req.params.cv5;
+  item[req.params.c6] = req.params.cv6;
+  item[req.params.c7] = req.params.cv7;
+  item[req.params.c8] = req.params.cv8;
+  item[req.params.c9] = req.params.cv9;
+  console.log(JSON.stringify(item));
+  MongoClient.connect(mongourl, function(err,db) {
+    assert.equal(err,null);
+    console.log('Connected to MongoDB');
+    findRestaurants(db,item,function(restaurants) {
+      db.close();
+      console.log('Disconnected MongoDB');
+      console.log('restaurants returned = ' + restaurants.length);
+    	
+        res.status(200).json(restaurants);
+
+    });
+  });
+});
 
 app.post('/api/restaurant/create', function(req,res) {
   var new_r = {};
