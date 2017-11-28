@@ -70,14 +70,18 @@ app.post('/processlogin', function(req,res) {
       console.log('Disconnected MongoDB\n');
 			if (user.length == 0) {
         console.log('Login Failed');
-        res.redirect('/logout');
+        var mes = [];
+              mes[0] = 'Userid or password not correct!!!!!';
+              res.render("message",{m:mes});
 			} else {
           if(loginUser.userid != null) {
             console.log('Now user = '+user[0].userid);
             req.session.authenticated = true;
             req.session.userid = loginUser.userid;
             res.redirect('/read');}
-          else{res.redirect('/logout');}
+          else{ var mes = [];
+              mes[0] = 'Userid or password not correct!!!!!';
+              res.render("message",{m:mes});}
           
       }
 
@@ -121,15 +125,40 @@ app.post('/processcreateac', function(req,res) {
   var newUser = {};
   newUser['userid'] = userid;
   newUser['pw'] = pw;
-  console.log("user id = " + userid);
-  console.log("pw = " + pw);
+  var isexist = false;
+  var mes = [];
+  var match = {};
+  match['userid'] = newUser['userid'];
+  MongoClient.connect(mongourl, function(err, db) {
+    assert.equal(err,null);
+    console.log('Connected to MongoDB\n');
+    matchLogin(db,match,function(user) {
+			db.close();
+      console.log('Disconnected MongoDB\n');
+      console.log(user.length);
+			if (user.length > 0) {
+        mes[0] = 'This userid existed!!';
+        mes[1] = 'Please enter another userid!!';
+        res.render("message",{m:mes});
+        }
+      else{
+        console.log("user id = " + userid);
+    console.log("pw = " + pw);
   MongoClient.connect(mongourl,function(err,db) {
 		assert.equal(err,null);
 		console.log('Connected to MongoDB\n');
 		insertUser(db,newUser,function(result) {
       db.close();
-  res.redirect('/');
-})})});
+  mes[0] = 'Account created!';
+  res.render("message",{m:mes});
+    })})
+      }
+		}); 
+});
+  
+    
+
+});
 
 app.post('/fileupload', function(req,res) {
   if (!req.session.authenticated  ||loginUser.userid == null) {
@@ -405,11 +434,9 @@ app.post('/processsearch', function(req,res) {
     if (req.body.name) searchitem['name'] = req.body.name;
     if (req.body.borough) searchitem['borough'] = req.body.borough;
     if (req.body.cuisine) searchitem['cuisine'] = req.body.cuisine;
-    var address = {};
-    if (req.body.building) address['building'] = req.body.building;
-    if (req.body.street) address['street'] = req.body.street;
-    if (req.body.zipcode) address['zipcode'] = req.body.zipcode;
-    if (address.building || address.street || address.zipcode) searchitem['address'] = address;
+    if (req.body.building) searchitem["address.building"] = req.body.building;
+    if (req.body.street) searchitem["address.street"] = req.body.street;
+    if (req.body.zipcode) searchitem["address.zipcode"] = req.body.zipcode;
     var gps ={};
     if (req.body.coordlon) gps['coordlon'] = req.body.coordlon;
     if (req.body.coordlat) gps['coordlat'] = req.body.coordlat;
@@ -451,7 +478,8 @@ function deleteRestaurant(db,criteria,callback) {
 }
 
 function matchLogin(db,match,callback) {
-	var user = [];
+  var user = [];
+  console.log(match);
   cursor = db.collection('user').find(match); 			
 	cursor.each(function(err, doc) {
 		assert.equal(err, null); 
@@ -526,7 +554,11 @@ app.get('/api/restaurant/read', function(req,res) {
 
 app.get('/api/restaurant/read/:c1/:cv1', function(req,res) {
   var item = {};
-  item[req.params.c1] = req.params.cv1;
+  if (req.params.c1 == 'building' || req.params.c1 == 'street'|| req.params.c1 == 'zipcode'){
+    item["address."+req.params.c1] = req.params.cv1;
+  }else{
+     item[req.params.c1] = req.params.cv1;
+  }
   console.log(JSON.stringify(item));
   MongoClient.connect(mongourl, function(err,db) {
     assert.equal(err,null);
@@ -544,8 +576,16 @@ app.get('/api/restaurant/read/:c1/:cv1', function(req,res) {
 
 app.get('/api/restaurant/read/:c1/:cv1/:c2/:cv2', function(req,res) {
   var item = {};
-  item[req.params.c1] = req.params.cv1;
-  item[req.params.c2] = req.params.cv2;
+  if (req.params.c1 == 'building' || req.params.c1 == 'street'|| req.params.c1 == 'zipcode'){
+    item["address."+req.params.c1] = req.params.cv1;
+  }else{
+     item[req.params.c1] = req.params.cv1;
+  }
+  if (req.params.c2 == 'building' || req.params.c2 == 'street'|| req.params.c2 == 'zipcode'){
+    item["address."+req.params.c2] = req.params.cv2;
+  }else{
+     item[req.params.c2] = req.params.cv2;
+  }
   console.log(JSON.stringify(item));
   MongoClient.connect(mongourl, function(err,db) {
     assert.equal(err,null);
@@ -563,9 +603,21 @@ app.get('/api/restaurant/read/:c1/:cv1/:c2/:cv2', function(req,res) {
 
 app.get('/api/restaurant/read/:c1/:cv1/:c2/:cv2/:c3/:cv3', function(req,res) {
   var item = {};
-  item[req.params.c1] = req.params.cv1;
-  item[req.params.c2] = req.params.cv2;
-  item[req.params.c3] = req.params.cv3;
+  if (req.params.c1 == 'building' || req.params.c1 == 'street'|| req.params.c1 == 'zipcode'){
+    item["address."+req.params.c1] = req.params.cv1;
+  }else{
+     item[req.params.c1] = req.params.cv1;
+  }
+  if (req.params.c2 == 'building' || req.params.c2 == 'street'|| req.params.c2 == 'zipcode'){
+    item["address."+req.params.c2] = req.params.cv2;
+  }else{
+     item[req.params.c2] = req.params.cv2;
+  }
+  if (req.params.c3 == 'building' || req.params.c3 == 'street'|| req.params.c3 == 'zipcode'){
+    item["address."+req.params.c3] = req.params.cv3;
+  }else{
+     item[req.params.c3] = req.params.cv3;
+  }
   console.log(JSON.stringify(item));
   MongoClient.connect(mongourl, function(err,db) {
     assert.equal(err,null);
@@ -583,10 +635,25 @@ app.get('/api/restaurant/read/:c1/:cv1/:c2/:cv2/:c3/:cv3', function(req,res) {
 
 app.get('/api/restaurant/read/:c1/:cv1/:c2/:cv2/:c3/:cv3/:c4/:cv4', function(req,res) {
   var item = {};
-  item[req.params.c1] = req.params.cv1;
-  item[req.params.c2] = req.params.cv2;
-  item[req.params.c3] = req.params.cv3;
-  item[req.params.c4] = req.params.cv4;
+  if (req.params.c1 == 'building' || req.params.c1 == 'street'|| req.params.c1 == 'zipcode'){
+    item["address."+req.params.c1] = req.params.cv1;
+  }else{
+     item[req.params.c1] = req.params.cv1;
+  }
+  if (req.params.c2 == 'building' || req.params.c2 == 'street'|| req.params.c2 == 'zipcode'){
+    item["address."+req.params.c2] = req.params.cv2;
+  }else{
+     item[req.params.c2] = req.params.cv2;
+  }if (req.params.c3 == 'building' || req.params.c3 == 'street'|| req.params.c3 == 'zipcode'){
+    item["address."+req.params.c3] = req.params.cv3;
+  }else{
+     item[req.params.c3] = req.params.cv3;
+  }
+  if (req.params.c4 == 'building' || req.params.c4 == 'street'|| req.params.c4 == 'zipcode'){
+    item["address."+req.params.c4] = req.params.cv4;
+  }else{
+     item[req.params.c4] = req.params.cv4;
+  }
   console.log(JSON.stringify(item));
   MongoClient.connect(mongourl, function(err,db) {
     assert.equal(err,null);
@@ -604,11 +671,30 @@ app.get('/api/restaurant/read/:c1/:cv1/:c2/:cv2/:c3/:cv3/:c4/:cv4', function(req
 
 app.get('/api/restaurant/read/:c1/:cv1/:c2/:cv2/:c3/:cv3/:c4/:cv4/:c5/:cv5', function(req,res) {
   var item = {};
-  item[req.params.c1] = req.params.cv1;
-  item[req.params.c2] = req.params.cv2;
-  item[req.params.c3] = req.params.cv3;
-  item[req.params.c4] = req.params.cv4;
-  item[req.params.c5] = req.params.cv5;
+  if (req.params.c1 == 'building' || req.params.c1 == 'street'|| req.params.c1 == 'zipcode'){
+    item["address."+req.params.c1] = req.params.cv1;
+  }else{
+     item[req.params.c1] = req.params.cv1;
+  }
+  if (req.params.c2 == 'building' || req.params.c2 == 'street'|| req.params.c2 == 'zipcode'){
+    item["address."+req.params.c2] = req.params.cv2;
+  }else{
+     item[req.params.c2] = req.params.cv2;
+  }if (req.params.c3 == 'building' || req.params.c3 == 'street'|| req.params.c3 == 'zipcode'){
+    item["address."+req.params.c3] = req.params.cv3;
+  }else{
+     item[req.params.c3] = req.params.cv3;
+  }
+  if (req.params.c4 == 'building' || req.params.c4 == 'street'|| req.params.c4 == 'zipcode'){
+    item["address."+req.params.c4] = req.params.cv4;
+  }else{
+     item[req.params.c4] = req.params.cv4;
+  }
+   if (req.params.c5 == 'building' || req.params.c5 == 'street'|| req.params.c5 == 'zipcode'){
+    item["address."+req.params.c5] = req.params.cv5;
+  }else{
+     item[req.params.c5] = req.params.cv5;
+  }
   console.log(JSON.stringify(item));
   MongoClient.connect(mongourl, function(err,db) {
     assert.equal(err,null);
@@ -626,12 +712,35 @@ app.get('/api/restaurant/read/:c1/:cv1/:c2/:cv2/:c3/:cv3/:c4/:cv4/:c5/:cv5', fun
 
 app.get('/api/restaurant/read/:c1/:cv1/:c2/:cv2/:c3/:cv3/:c4/:cv4/:c5/:cv5/:c6/:cv6', function(req,res) {
   var item = {};
-  item[req.params.c1] = req.params.cv1;
-  item[req.params.c2] = req.params.cv2;
-  item[req.params.c3] = req.params.cv3;
-  item[req.params.c4] = req.params.cv4;
-  item[req.params.c5] = req.params.cv5;
-  item[req.params.c6] = req.params.cv6;
+  if (req.params.c1 == 'building' || req.params.c1 == 'street'|| req.params.c1 == 'zipcode'){
+    item["address."+req.params.c1] = req.params.cv1;
+  }else{
+     item[req.params.c1] = req.params.cv1;
+  }
+  if (req.params.c2 == 'building' || req.params.c2 == 'street'|| req.params.c2 == 'zipcode'){
+    item["address."+req.params.c2] = req.params.cv2;
+  }else{
+     item[req.params.c2] = req.params.cv2;
+  }if (req.params.c3 == 'building' || req.params.c3 == 'street'|| req.params.c3 == 'zipcode'){
+    item["address."+req.params.c3] = req.params.cv3;
+  }else{
+     item[req.params.c3] = req.params.cv3;
+  }
+  if (req.params.c4 == 'building' || req.params.c4 == 'street'|| req.params.c4 == 'zipcode'){
+    item["address."+req.params.c4] = req.params.cv4;
+  }else{
+     item[req.params.c4] = req.params.cv4;
+  }
+   if (req.params.c5 == 'building' || req.params.c5 == 'street'|| req.params.c5 == 'zipcode'){
+    item["address."+req.params.c5] = req.params.cv5;
+  }else{
+     item[req.params.c5] = req.params.cv5;
+  }
+    if (req.params.c6 == 'building' || req.params.c6 == 'street'|| req.params.c6 == 'zipcode'){
+    item["address."+req.params.c6] = req.params.cv6;
+  }else{
+     item[req.params.c6] = req.params.cv6;
+  }
   console.log(JSON.stringify(item));
   MongoClient.connect(mongourl, function(err,db) {
     assert.equal(err,null);
@@ -649,13 +758,40 @@ app.get('/api/restaurant/read/:c1/:cv1/:c2/:cv2/:c3/:cv3/:c4/:cv4/:c5/:cv5/:c6/:
 
 app.get('/api/restaurant/read/:c1/:cv1/:c2/:cv2/:c3/:cv3/:c4/:cv4/:c5/:cv5/:c6/:cv6/:c7/:cv7', function(req,res) {
   var item = {};
-  item[req.params.c1] = req.params.cv1;
-  item[req.params.c2] = req.params.cv2;
-  item[req.params.c3] = req.params.cv3;
-  item[req.params.c4] = req.params.cv4;
-  item[req.params.c5] = req.params.cv5;
-  item[req.params.c6] = req.params.cv6;
-  item[req.params.c7] = req.params.cv7;
+  if (req.params.c1 == 'building' || req.params.c1 == 'street'|| req.params.c1 == 'zipcode'){
+    item["address."+req.params.c1] = req.params.cv1;
+  }else{
+     item[req.params.c1] = req.params.cv1;
+  }
+  if (req.params.c2 == 'building' || req.params.c2 == 'street'|| req.params.c2 == 'zipcode'){
+    item["address."+req.params.c2] = req.params.cv2;
+  }else{
+     item[req.params.c2] = req.params.cv2;
+  }if (req.params.c3 == 'building' || req.params.c3 == 'street'|| req.params.c3 == 'zipcode'){
+    item["address."+req.params.c3] = req.params.cv3;
+  }else{
+     item[req.params.c3] = req.params.cv3;
+  }
+  if (req.params.c4 == 'building' || req.params.c4 == 'street'|| req.params.c4 == 'zipcode'){
+    item["address."+req.params.c4] = req.params.cv4;
+  }else{
+     item[req.params.c4] = req.params.cv4;
+  }
+   if (req.params.c5 == 'building' || req.params.c5 == 'street'|| req.params.c5 == 'zipcode'){
+    item["address."+req.params.c5] = req.params.cv5;
+  }else{
+     item[req.params.c5] = req.params.cv5;
+  }
+    if (req.params.c6 == 'building' || req.params.c6 == 'street'|| req.params.c6 == 'zipcode'){
+    item["address."+req.params.c6] = req.params.cv6;
+  }else{
+     item[req.params.c6] = req.params.cv6;
+  }
+  if (req.params.c7 == 'building' || req.params.c7 == 'street'|| req.params.c7 == 'zipcode'){
+    item["address."+req.params.c7] = req.params.cv7;
+  }else{
+     item[req.params.c7] = req.params.cv7;
+  }
   console.log(JSON.stringify(item));
   MongoClient.connect(mongourl, function(err,db) {
     assert.equal(err,null);
@@ -673,14 +809,45 @@ app.get('/api/restaurant/read/:c1/:cv1/:c2/:cv2/:c3/:cv3/:c4/:cv4/:c5/:cv5/:c6/:
 
 app.get('/api/restaurant/read/:c1/:cv1/:c2/:cv2/:c3/:cv3/:c4/:cv4/:c5/:cv5/:c6/:cv6/:c7/:cv7/:c8/:cv8', function(req,res) {
   var item = {};
-  item[req.params.c1] = req.params.cv1;
-  item[req.params.c2] = req.params.cv2;
-  item[req.params.c3] = req.params.cv3;
-  item[req.params.c4] = req.params.cv4;
-  item[req.params.c5] = req.params.cv5;
-  item[req.params.c6] = req.params.cv6;
-  item[req.params.c7] = req.params.cv7;
-  item[req.params.c8] = req.params.cv8;
+  if (req.params.c1 == 'building' || req.params.c1 == 'street'|| req.params.c1 == 'zipcode'){
+    item["address."+req.params.c1] = req.params.cv1;
+  }else{
+     item[req.params.c1] = req.params.cv1;
+  }
+  if (req.params.c2 == 'building' || req.params.c2 == 'street'|| req.params.c2 == 'zipcode'){
+    item["address."+req.params.c2] = req.params.cv2;
+  }else{
+     item[req.params.c2] = req.params.cv2;
+  }if (req.params.c3 == 'building' || req.params.c3 == 'street'|| req.params.c3 == 'zipcode'){
+    item["address."+req.params.c3] = req.params.cv3;
+  }else{
+     item[req.params.c3] = req.params.cv3;
+  }
+  if (req.params.c4 == 'building' || req.params.c4 == 'street'|| req.params.c4 == 'zipcode'){
+    item["address."+req.params.c4] = req.params.cv4;
+  }else{
+     item[req.params.c4] = req.params.cv4;
+  }
+   if (req.params.c5 == 'building' || req.params.c5 == 'street'|| req.params.c5 == 'zipcode'){
+    item["address."+req.params.c5] = req.params.cv5;
+  }else{
+     item[req.params.c5] = req.params.cv5;
+  }
+    if (req.params.c6 == 'building' || req.params.c6 == 'street'|| req.params.c6 == 'zipcode'){
+    item["address."+req.params.c6] = req.params.cv6;
+  }else{
+     item[req.params.c6] = req.params.cv6;
+  }
+  if (req.params.c7 == 'building' || req.params.c7 == 'street'|| req.params.c7 == 'zipcode'){
+    item["address."+req.params.c7] = req.params.cv7;
+  }else{
+     item[req.params.c7] = req.params.cv7;
+  }
+  if (req.params.c8 == 'building' || req.params.c8 == 'street'|| req.params.c8 == 'zipcode'){
+    item["address."+req.params.c8] = req.params.cv8;
+  }else{
+     item[req.params.c8] = req.params.cv8;
+  }
   console.log(JSON.stringify(item));
   MongoClient.connect(mongourl, function(err,db) {
     assert.equal(err,null);
@@ -698,15 +865,50 @@ app.get('/api/restaurant/read/:c1/:cv1/:c2/:cv2/:c3/:cv3/:c4/:cv4/:c5/:cv5/:c6/:
 
 app.get('/api/restaurant/read/:c1/:cv1/:c2/:cv2/:c3/:cv3/:c4/:cv4/:c5/:cv5/:c6/:cv6/:c7/:cv7/:c8/:cv8/:c9/:cv9', function(req,res) {
   var item = {};
-  item[req.params.c1] = req.params.cv1;
-  item[req.params.c2] = req.params.cv2;
-  item[req.params.c3] = req.params.cv3;
-  item[req.params.c4] = req.params.cv4;
-  item[req.params.c5] = req.params.cv5;
-  item[req.params.c6] = req.params.cv6;
-  item[req.params.c7] = req.params.cv7;
-  item[req.params.c8] = req.params.cv8;
-  item[req.params.c9] = req.params.cv9;
+  if (req.params.c1 == 'building' || req.params.c1 == 'street'|| req.params.c1 == 'zipcode'){
+    item["address."+req.params.c1] = req.params.cv1;
+  }else{
+     item[req.params.c1] = req.params.cv1;
+  }
+  if (req.params.c2 == 'building' || req.params.c2 == 'street'|| req.params.c2 == 'zipcode'){
+    item["address."+req.params.c2] = req.params.cv2;
+  }else{
+     item[req.params.c2] = req.params.cv2;
+  }if (req.params.c3 == 'building' || req.params.c3 == 'street'|| req.params.c3 == 'zipcode'){
+    item["address."+req.params.c3] = req.params.cv3;
+  }else{
+     item[req.params.c3] = req.params.cv3;
+  }
+  if (req.params.c4 == 'building' || req.params.c4 == 'street'|| req.params.c4 == 'zipcode'){
+    item["address."+req.params.c4] = req.params.cv4;
+  }else{
+     item[req.params.c4] = req.params.cv4;
+  }
+   if (req.params.c5 == 'building' || req.params.c5 == 'street'|| req.params.c5 == 'zipcode'){
+    item["address."+req.params.c5] = req.params.cv5;
+  }else{
+     item[req.params.c5] = req.params.cv5;
+  }
+    if (req.params.c6 == 'building' || req.params.c6 == 'street'|| req.params.c6 == 'zipcode'){
+    item["address."+req.params.c6] = req.params.cv6;
+  }else{
+     item[req.params.c6] = req.params.cv6;
+  }
+  if (req.params.c7 == 'building' || req.params.c7 == 'street'|| req.params.c7 == 'zipcode'){
+    item["address."+req.params.c7] = req.params.cv7;
+  }else{
+     item[req.params.c7] = req.params.cv7;
+  }
+  if (req.params.c8 == 'building' || req.params.c8 == 'street'|| req.params.c8 == 'zipcode'){
+    item["address."+req.params.c8] = req.params.cv8;
+  }else{
+     item[req.params.c8] = req.params.cv8;
+  }
+ if (req.params.c9 == 'building' || req.params.c9 == 'street'|| req.params.c9 == 'zipcode'){
+    item["address."+req.params.c9] = req.params.cv9;
+  }else{
+     item[req.params.c9] = req.params.cv9;
+  }
   console.log(JSON.stringify(item));
   MongoClient.connect(mongourl, function(err,db) {
     assert.equal(err,null);
@@ -724,10 +926,9 @@ app.get('/api/restaurant/read/:c1/:cv1/:c2/:cv2/:c3/:cv3/:c4/:cv4/:c5/:cv5/:c6/:
 
 app.post('/api/restaurant/create', function(req,res) {
   var new_r = {};
-  if (req.files.filetoupload) var filename = req.files.filetoupload.name;
+  //if (req.files.filetoupload) var filename = req.files.filetoupload.name;
   new_r['id'] = Date.now().toString();
   if (req.body.name) {new_r['name'] = req.body.name;}
-  else {new_r['name'] = 'Created Without Name';}
 	new_r['borough'] = req.body.borough;
 	new_r['cuisine'] = req.body.cuisine;
 	var address = {};
@@ -741,33 +942,34 @@ app.post('/api/restaurant/create', function(req,res) {
   new_r['gps'] = gps;
   var grade =[];
   new_r['grade']=grade;
-  if (req.body.name) {new_r['owner'] = req.body.owner;}
-  else {new_r['owner'] = 'UnknownOwner';}
+  if (req.body.owner) {new_r['owner'] = req.body.owner;}
   var image = {};
-  if (filename) image['image'] = filename;
-  if (filename){
-  fs.readFile(filename, function(err,data) {
-      new_r['mimetype'] = mimetype;
-      new_r['image'] = new Buffer(data).toString('base64');
-      });}
-  console.log(JSON.stringify(new_r));
+  // if (filename) image['image'] = filename;
+  // if (filename){
+  // fs.readFile(filename, function(err,data) {
+  //     new_r['mimetype'] = mimetype;
+  //     new_r['image'] = new Buffer(data).toString('base64');
+  //     });}
+  if (req.body.owner && req.body.name){
+    console.log(JSON.stringify(new_r));
   MongoClient.connect(mongourl,function(err,db) {
     new_r['image'] = image;
     insertRestaurants(db,new_r,function(result) {
       db.close();
       //console.log(result);
-      if (result.insertedId){
+      
         res.send({
           status: "ok",
           _id: ObjectID(result.insertedId)
         });
-      } else{
-        res.send({
+      })
+  });
+  } else{ res.send({
           status: "failed"
-        });
-      }
-    })
-});
+        });}
+  
+        
+    
 });
 
 app.use(function(req, res) {
