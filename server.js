@@ -1,3 +1,4 @@
+
 var express = require('express');
 var app = express();
 app.set('view engine', 'ejs');
@@ -12,6 +13,7 @@ var fs = require('fs');
 var session = require('cookie-session');
 
 var mongourl = "mongodb://g1141464:g1141464@ds141474.mlab.com:41474/g1141464";
+var gmapkey ="AIzaSyCPqiUhRvSy2m5N__6fIvANVRq2j-q7w2A";
 
 var loginUser = {};
 loginUser['userid'] = null;
@@ -244,7 +246,7 @@ app.get('/map', function(req,res) {
   if (!req.session.authenticated ||loginUser.userid == null) {
 		res.redirect('/logout');
 	}else {res.render('gmap.ejs',
-             {lat:req.query.lat,lon:req.query.lon});}
+             {lat:req.query.lat,lon:req.query.lon,k:gmapkey});}
 });
 
 app.get('/rate', function(req,res) {
