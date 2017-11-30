@@ -45,7 +45,7 @@
         <p> GPS: <%= p.gps.coordlat%> , <%= p.gps.coordlon%> </p>
         <% if (lat != -1 && lon != -1) { %>
         <h3>
-            <a href='/map?lat=<%=lat%>&lon=<%=lon%>'>
+            <a href='/map?lat=<%=lat%>&lon=<%=lon%>&name=<%= p.name %>'>
                 Go to Google Map
             </a>
         </h3>
