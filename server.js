@@ -246,7 +246,7 @@ app.get('/map', function(req,res) {
   if (!req.session.authenticated ||loginUser.userid == null) {
 		res.redirect('/logout');
 	}else {res.render('gmap.ejs',
-             {lat:req.query.lat,lon:req.query.lon,k:gmapkey});}
+             {lat:req.query.lat,lon:req.query.lon,k:gmapkey,name:req.query.name});}
 });
 
 app.get('/rate', function(req,res) {
