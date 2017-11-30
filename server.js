@@ -13,7 +13,7 @@ var fs = require('fs');
 var session = require('cookie-session');
 
 var mongourl = "mongodb://g1141464:g1141464@ds141474.mlab.com:41474/g1141464";
-var gmapkey ="AIzaSyCPqiUhRvSy2m5N__6fIvANVRq2j-q7w2A";
+var gmapkey ="AIzaSyDz8SpXNyMgDSGgF33WHFecR0vw4XGRE1g";
 
 var loginUser = {};
 loginUser['userid'] = null;
