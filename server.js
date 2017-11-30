@@ -443,6 +443,7 @@ app.post('/processsearch', function(req,res) {
     if (req.body.coordlon) gps['coordlon'] = req.body.coordlon;
     if (req.body.coordlat) gps['coordlat'] = req.body.coordlat;
     if (gps.coordlon && gps.coordlat) searchitem['gps'] = gps;
+    if (req.body.owner) searchitem['owner'] = req.body.owner;
 
     console.log('searchitem =' +  JSON.stringify(searchitem));
 
