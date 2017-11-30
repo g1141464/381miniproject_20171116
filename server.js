@@ -8,7 +8,6 @@ var fileUpload = require('express-fileupload');
 var MongoClient = require('mongodb').MongoClient;
 var assert = require('assert');
 var ObjectID = require('mongodb').ObjectID;
-// var ExifImage = require('exif').ExifImage;
 var fs = require('fs');
 var session = require('cookie-session');
 
@@ -40,10 +39,6 @@ app.get('/new', function(req,res) {
         res.status(200);
         res.render("upload",{owner: loginUser.userid});}
 });
-
-// app.get('/', function(req,res) {
-//   res.redirect('/photos');
-// });
 
 app.get('/', function(req,res) {
   if (!req.session.authenticated) {
@@ -210,7 +205,11 @@ app.post('/fileupload', function(req,res) {
       new_r['image'] = image;
       insertRestaurants(db,new_r,function(result) {
         db.close();
-        res.redirect('/');})
+        res.status(200);
+        var mes =[];
+        mes[0] = 'Restaurant was inserted into MongoDB!';
+        res.render("message",{m:mes});
+    })
   })
   }
 }});
