@@ -188,10 +188,10 @@ app.post('/fileupload', function(req,res) {
   var image = {};
   if (filename) image['image'] = filename;
   if (filename){
-  fs.readFile(filename, function(err,data) {
+
     MongoClient.connect(mongourl,function(err,db) {
-      new_r['mimetype'] = mimetype;
-      new_r['image'] = new Buffer(data).toString('base64');
+      new_r['mimetype'] = req.files.filetoupload.mimetype;
+      new_r['image'] = new Buffer(req.files.filetoupload.data).toString('base64');
       insertRestaurants(db,new_r,function(result) {
         db.close();
         res.status(200);
@@ -200,7 +200,7 @@ app.post('/fileupload', function(req,res) {
         res.render("message",{m:mes});
       })
     });
-  })}
+  }
   else{MongoClient.connect(mongourl,function(err,db) {
       new_r['image'] = image;
       insertRestaurants(db,new_r,function(result) {
