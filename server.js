@@ -134,8 +134,8 @@ app.post('/processcreateac', function(req,res) {
       console.log('Disconnected MongoDB\n');
       console.log(user.length);
 			if (user.length > 0) {
-        mes[0] = 'This userid existed!!';
-        mes[1] = 'Please enter another userid!!';
+        mes[0] = 'That userid is taken!!';
+        mes[1] = 'Please try another userid!!';
         res.render("message",{m:mes});
         }
       else{
@@ -355,14 +355,41 @@ app.post('/processedit', function(req,res) {
     edititem['gps'] = gps;
   
     console.log("filename = " + filename);
+    /*
+var image = {};
+  if (filename) image['image'] = filename;
+  if (filename){
 
+    MongoClient.connect(mongourl,function(err,db) {
+      new_r['mimetype'] = req.files.filetoupload.mimetype;
+      new_r['image'] = new Buffer(req.files.filetoupload.data).toString('base64');
+      insertRestaurants(db,new_r,function(result) {
+        db.close();
+        res.status(200);
+        var mes =[];
+        mes[0] = 'Restaurant was inserted into MongoDB!';
+        res.render("message",{m:mes});
+      })
+    });
+  }
+  else{MongoClient.connect(mongourl,function(err,db) {
+      new_r['image'] = image;
+      insertRestaurants(db,new_r,function(result) {
+        db.close();
+        res.status(200);
+        var mes =[];
+        mes[0] = 'Restaurant was inserted into MongoDB!';
+        res.render("message",{m:mes});
+    })
+  })
+  }
+    */
     var image = {};
     if (filename) image['image'] = filename;
     if (filename){
-    fs.readFile(filename, function(err,data) {
-        edititem['mimetype'] = mimetype;
-        edititem['image'] = new Buffer(data).toString('base64');
-        })}
+        edititem['mimetype'] = req.files.filetoupload.mimetype;
+        edititem['image'] = new Buffer(req.files.filetoupload.data).toString('base64');
+        }
     MongoClient.connect(mongourl,function(err,db) {
       assert.equal(err,null);
       console.log('Connected to MongoDB\n');
