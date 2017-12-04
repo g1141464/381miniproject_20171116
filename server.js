@@ -189,7 +189,7 @@ app.post('/fileupload', function(req,res) {
   if (filename) image['image'] = filename;
   if (filename){
       console.log(req.files.filetoupload.mimetype);
-      if(req.files.filetoupload.mimetype != 'application/vnd.ms-excel'){
+      if(req.files.filetoupload.mimetype.includes("image")){
         new_r['mimetype'] = req.files.filetoupload.mimetype;
       new_r['image'] = new Buffer(req.files.filetoupload.data).toString('base64');
       }
@@ -390,9 +390,9 @@ var image = {};
     var image = {};
     if (filename) image['image'] = filename;
     if (filename){
-        if(req.files.filetoupload.mimetype != 'application/vnd.ms-excel'){
-        new_r['mimetype'] = req.files.filetoupload.mimetype;
-      new_r['image'] = new Buffer(req.files.filetoupload.data).toString('base64');
+        if(req.files.filetoupload.mimetype.includes("image")){
+        edititem['mimetype'] = req.files.filetoupload.mimetype;
+        edititem['image'] = new Buffer(req.files.filetoupload.data).toString('base64');
       }
         }
     MongoClient.connect(mongourl,function(err,db) {
