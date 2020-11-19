@@ -1,23 +1,45 @@
-
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
 
   <title>Message</title>
-  
+
 </head>
 
 
 <body>
-    <h1>Message for the operation:</h1>
 
+  <div class="w3-top">
+    <div class="w3-bar w3-white w3-wide w3-padding w3-card">
+      <a href="/" class="w3-bar-item w3-button"><b>
+          <h1>Home</h1>
+        </b></a>
+      <!-- Float links to the right. Hide them on small screens -->
+      <div class="w3-right w3-hide-small">
+        <a href="/read" class="w3-bar-item w3-button">Go Back</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="w3-container w3-padding-32" id="contact">
+    <h3 class="w3-border-bottom w3-border-light-grey w3-padding-16"></h3>
+    </br>
+    <p>Message for the operation:</p>
     <% for (var i in m) { %>
-        <p><%= m[i] %></p>
+    <p><%= m[i] %></p>
     <% } %>
-    
-    <a href="/read"><button class="btn btn-default">Go Back</button></a>
+  </div>
+
+
+
+
+
+
+
 </body>
+
 </html>

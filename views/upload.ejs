@@ -1,23 +1,76 @@
-<!DOCTYPE html><html>
+<!DOCTYPE html>
+<html>
+
 <head>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Create new restaurants</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <title>Create new restaurant</title>
 </head>
+
 <body>
-<form action="fileupload" method="post" enctype="multipart/form-data">
-Name: <input type="text" name="name" minlength=1 required><br>
-borough: <input type="text" name="borough"  ><br>
-cuisine: <input type="text" name="cuisine"  ><br>
-address: <br>
-street: <input type="text" name="street"  ><br>
-building: <input type="text" name="building" ><br>
-zipcode: <input type="text" name="zipcode"  ><br>
-GPS Coordinates (lon.): <input type="number" step="any" name="coordlon"  ><br>
-GPS Coordinates (lat.): <input type="number" step="any" name="coordlat"  ><br>
-<input type="hidden" name="user" value=""><br>
-<input type="hidden" name="score" value=""><br>
-<input type="hidden" name="owner" value=<%= owner%>><br>
-Photo :<input type="file" name="filetoupload"><br>
-<input type="submit">
-</form>
-</body></html>    
+
+    <div class="w3-top">
+        <div class="w3-bar w3-white w3-wide w3-padding w3-card">
+            <a href="/" class="w3-bar-item w3-button"><b>
+                    <h1>Create new restaurant</h1>
+                </b></a>
+            <!-- Float links to the right. Hide them on small screens -->
+            <div class="w3-right w3-hide-small">
+                <a href="/read" class="w3-bar-item w3-button">Go Back</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="w3-container w3-padding-32" id="projects">
+
+        <h3 class="w3-border-bottom w3-border-light-grey w3-padding-16">Login</h3>
+        <p>Please enter the information for the new restaurant:</p>
+        <form action="fileupload" method="post" enctype="multipart/form-data">
+            <input type="hidden" name="user" value=""><br>
+            <input type="hidden" name="score" value=""><br>
+            <input type="hidden" name="owner" value=<%= owner%>><br>
+
+            <p>Name</p>
+            <input class="w3-input w3-border" type="text" name="name" minlength=1 required>
+            <p>Cuisine</p>
+            <input class="w3-input w3-border" type="text" name="cuisine">
+            <p>Address</p>
+            <p>Street</p>
+            <input class="w3-input w3-border" type="text" name="street">
+            <p>Building</p>
+            <input class="w3-input w3-border" type="text" name="building">
+            <p>Zipcode</p>
+            <input class="w3-input w3-border" type="text" name="zipcode">
+            <p>GPS Coordinates (lon.)</p>
+            <input class="w3-input w3-border" type="number" step="any" name="coordlon">
+            <p> GPS Coordinates (lat.)</p>
+            <input class="w3-input w3-border" input type="number" step="any" name="coordlat">
+            <p>Photo</p>
+            <input class="w3-input w3-border" type="file" name="filetoupload">
+            <button class="w3-button w3-black w3-section" type="submit" value="Submit">
+                <i class="fa fa-paper-plane"></i> Submit
+            </button>
+        </form>
+    </div>
+    <!--
+    <form action="fileupload" method="post" enctype="multipart/form-data">
+        Name: <input type="text" name="name" minlength=1 required><br>
+        borough: <input type="text" name="borough"><br>
+        cuisine: <input type="text" name="cuisine"><br>
+        address: <br>
+        street: <input type="text" name="street"><br>
+        building: <input type="text" name="building"><br>
+        zipcode: <input type="text" name="zipcode"><br>
+        GPS Coordinates (lon.): <input type="number" step="any" name="coordlon"><br>
+        GPS Coordinates (lat.): <input type="number" step="any" name="coordlat"><br>
+        <input type="hidden" name="user" value=""><br>
+        <input type="hidden" name="score" value=""><br>
+        <input type="hidden" name="owner" value=<%= owner%>><br>
+        Photo :<input type="file" name="filetoupload"><br>
+        <input type="submit">
+    </form>
+
+-->
+</body>
+
+</html>

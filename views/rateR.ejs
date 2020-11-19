@@ -1,18 +1,41 @@
-
 <html>
-        <title>Rate </title>
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <body>
-          <h2>Rate </h2>
-        </div>
-        <p>
-        <form action="/processrate" method="post">
-          <input type="hidden" name="id" value=<%=p._id%>>
-          <input type="hidden" name="user" value=<%= owner%>>
-          Score (1-10):</br>
-          <input  type="number" name="score" min=1 max=10 required>
-          <input type="submit" value="Submit">
-        </form>
-        </body>
+<title>Rate </title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+
+<body>
+
+  <div class="w3-top">
+    <div class="w3-bar w3-white w3-wide w3-padding w3-card">
+      <a href="/" class="w3-bar-item w3-button"><b>
+          <h1>Home</h1>
+        </b></a>
+      <!-- Float links to the right. Hide them on small screens -->
+      <div class="w3-right w3-hide-small">
+        <a href="/read" class="w3-bar-item w3-button">Go Back</a>
+      </div>
+    </div>
+  </div>
+
+
+  <div class="w3-container w3-padding-32" id="contact">
+    </br>
+    <h3 class="w3-border-bottom w3-border-light-grey w3-padding-16">
+      <p></p>Rate this restaurant</p>
+    </h3>
+
+  </div>
+
+  <form action="/processrate" method="post">
+    <input type="hidden" name="id" value=<%=p._id%>>
+    <input type="hidden" name="user" value=<%= owner%>>
+
+    <p>Score (1-10):</p>
+    <input class="w3-input w3-border" type="number" name="score" min=1 max=10 required>
+    <button class="w3-button w3-black w3-section" type="submit" value="Submit">
+      <i class="fa fa-paper-plane"></i> Submit
+    </button>
+  </form>
+</body>
+
 </html>
-        

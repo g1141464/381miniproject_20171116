@@ -2,55 +2,94 @@
 <html>
 
 <head>
-   <title><%= p.name %></title>
-   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-   <style>
-      img {
-         width: 100%;
-         height: auto;
-      }
-   </style>
+    <title><%= p.name %></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <style>
+        img {
+            width: 100%;
+            height: auto;
+        }
+    </style>
 </head>
 
 <body>
-         <h1>
-            <%= p.name %>
-         </h1>
-        <% if (!p.mimetype) { %>
-            <h2>No image</h2>
-        <% } else { %>
-            <img src="data:<%= p.mimetype %>;base64, <%= p.image %>">
-            <% } %>
-        <p>Restaurant_id: <%= p.id%></p>
-        <p>Borough: <%= p.borough%></p>
-        <p>Cuisine: <%= p.cuisine%></p>
-        <p>Address: 
-            <ul>
-            <li>street: <%= p.address.street%></li>
-            <li>building: <%= p.address.building%></li>
-            <li>zipcode: <%= p.address.zipcode%></li>
-            </ul>
-        </p>
-        <p>Rating:
-            <% if (p.grade){ %>
-            <ol>
-                    <% for (var i in p.grade) { %>
-                        <li><b><%=p.grade[i].user %></b> rated <b><%=p.grade[i].score%></b></li> 
+    <div class="w3-top">
+        <div class="w3-bar w3-white w3-wide w3-padding w3-card">
+            <a href="#home" class="w3-bar-item w3-button"><b>
+                    <h1><%= p.name %></h1>
+                </b></a>
+            <!-- Float links to the right. Hide them on small screens -->
+            <div class="w3-right w3-hide-small">
+                <a href="/rate?_id=<%= p ._id%>" class="w3-bar-item w3-button">Rate</a>
+                <a href="/edit?_id=<%= p ._id%>" class="w3-bar-item w3-button">Edit</a>
+                <a href="/delete?_id=<%= p ._id%>" class="w3-bar-item w3-button">Delete</a>
+                <a href="/read" class="w3-bar-item w3-button">Go Back</a>
+            </div>
+        </div>
+    </div>
+    <!-- Page content -->
+    <div class="w3-content w3-padding" style="max-width:1564px">
+
+        <!-- Project Section -->
+        <div class="w3-container w3-padding-32" id="projects">
+            <h3 class="w3-border-bottom w3-border-light-grey w3-padding-16"><%= p.name %></h3>
+        </div>
+
+        <div class="w3-row-padding">
+            <div class="w3-col l3 m6 w3-margin-bottom">
+                <div class="w3-display-container">
+                    <div class="w3-display-topleft w3-black w3-padding"><%= p.name %></div>
+
+                    <% if (!p.mimetype) { %>
+                    <!-- No image-->>
+                    <% } else { %>
+                    <img src="data:<%= p.mimetype %>;base64, <%= p.image %>" alt="<%= p.name %>" style="width:100%">
+
                     <% } %>
-            </ol>
-            <% }%>
-        </p>
-        <p> Owner: <%= p.owner%></p>
-        <% if(p.gps.coordlat && p.gps.coordlon) { %>
-        <p> GPS: <%= p.gps.coordlat%> , <%= p.gps.coordlon%> </p>
-        <% if (lat != -1 && lon != -1) { %>
+                    <p>Restaurant_id: <%= p.id%></p>
+                    <p>Borough: <%= p.borough%></p>
+                    <p>Cuisine: <%= p.cuisine%></p>
+                    <p>Address:
+                    <ul>
+                        <li>street: <%= p.address.street%></li>
+                        <li>building: <%= p.address.building%></li>
+                        <li>zipcode: <%= p.address.zipcode%></li>
+                    </ul>
+                    </p>
+                    <p>Rating:
+                        <% if (p.grade){ %>
+                    <ol>
+                        <% for (var i in p.grade) { %>
+                        <li><b><%=p.grade[i].user %></b> rated <b><%=p.grade[i].score%></b></li>
+                        <% } %>
+                    </ol>
+                    <% }%>
+                    </p>
+                    <p> Owner: <%= p.owner%></p>
+
+                </div>
+            </div>
+
+        </div>
+
+        <!-- End page content -->
+    </div>
+
+
+    <% if(p.gps.coordlat && p.gps.coordlon) { %>
+    <p> GPS: <%= p.gps.coordlat%> , <%= p.gps.coordlon%> </p>
+    <% if (lat != -1 && lon != -1) { %>
+    <div class="w3-container">
         <h3>
-            <a href='/map?lat=<%=lat%>&lon=<%=lon%>&name=<%= p.name %>'>
+            <a href='/map?lat=<%=lat%>&lon=<%=lon%>&name=<%= p.name %>' class="w3-button w3-black w3-section">
                 Go to Google Map
             </a>
         </h3>
-        <% }} %>
-        <table>
+    </div>
+    <% }} %>
+    <!--
+            <table>
         <tr>
             <td><a href="/rate?_id=<%= p ._id%>">
             <button class="btn btn-default">Rate</button>
@@ -66,5 +105,7 @@
             </a></td>
         </tr>
         </table>
+    -->
 </body>
+
 </html>

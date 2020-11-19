@@ -1,34 +1,73 @@
-
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
 
-  <title>Restaurant</title>
-  
+    <title>Restaurant</title>
+
 </head>
 
 
 <body>
-    <h1>Restaurants</h1>
-    <p>User: <%= user.userid %></p>
-    <p>Showing  <%= restaurant.length %> restaurants</p>
-    <table><tr>
-        <td><a href="/new"><button class="btn btn-default">Create New Restaurant</button></a></td>
-        <td><a href="/search"><button class="btn btn-default">Search Restaurant</button></a></td>
-        </tr></table>
-    </a>
-    <p><a href="/logout">
-        <button class="btn btn-default">Logout</button>
-    </a></p>
-    <ol> 
-        <% for (var i in restaurant) { %>
-            <li><a href='/display?_id=<%= restaurant[i]._id %>'><%= restaurant[i].name %></a></li> 
-        <% } %>
-    </ol> 
- 
-    
+    <div class="w3-content w3-padding" style="max-width:1564px">
+        <div class="w3-top">
+            <div class="w3-bar w3-white w3-wide w3-padding w3-card">
+                <a href="#home" class="w3-bar-item w3-button"><b>
+                        <h1>Restaurants</h1>
+                    </b></a>
+                <!-- Float links to the right. Hide them on small screens -->
+                <div class="w3-right w3-hide-small">
+                    <a href="/new" class="w3-bar-item w3-button">Create New Restaurant</a>
+                    <a href="/search" class="w3-bar-item w3-button">Search Restaurant</a>
+                    <a href="/logout" class="w3-bar-item w3-button">Logout</a>
+                </div>
+            </div>
+        </div>
+
+        <!--
+    <div class="w3-row-padding">
+        <div class="w3-col l3 m6 w3-margin-bottom">
+            <div class="w3-display-container">
+                <div class="w3-display-topleft w3-black w3-padding">User: <%= user.userid %></div>
+                <div class="w3-display-topleft w3-black w3-padding">Showing <%= restaurant.length %> restaurants</div>
+                <ol>
+                    <% for (var i in restaurant) { %>
+                    <li><a href='/display?_id=<%= restaurant[i]._id %>'><%= restaurant[i].name %></a></li>
+                    <% } %>
+                </ol>
+
+            </div>
+        </div>
+    -->
+
+
+        </br></br></br></br>
+
+
+        <div class="w3-container w3-padding-32" id="about">
+            <h3>Current User: <%= user.userid %></h3>
+            <p>Showing <%= restaurant.length %> restaurants
+            </p>
+        </div>
+
+
+        <div class="w3-row-padding w3-grayscale">
+            <div class="w3-col l3 m6 w3-margin-bottom">
+                <ol>
+                    <% for (var i in restaurant) { %>
+                    <li><a href='/display?_id=<%= restaurant[i]._id %>'><%= restaurant[i].name %></a></li>
+                    <% } %>
+                </ol>
+
+            </div>
+
+        </div>
+    </div>
 </body>
+
+</body>
+
 </html>

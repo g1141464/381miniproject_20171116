@@ -1,10 +1,60 @@
-<!DOCTYPE html><html>
-        <head>
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Search restaurants</title>
-        </head>
-        <body>
-            <h1>Please enter the search criteria:</h1>
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <title>Search restaurants</title>
+</head>
+
+<body>
+
+
+    <div class="w3-top">
+        <div class="w3-bar w3-white w3-wide w3-padding w3-card">
+            <a href="/" class="w3-bar-item w3-button"><b>
+                    <h1>Search a restaurant</h1>
+                </b></a>
+            <!-- Float links to the right. Hide them on small screens -->
+            <div class="w3-right w3-hide-small">
+                <a href="/read" class="w3-bar-item w3-button">Go Back</a>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="w3-container w3-padding-32" id="projects">
+
+        <h3 class="w3-border-bottom w3-border-light-grey w3-padding-16">Login</h3>
+        <p>Please enter the search criteria:</p>
+        <form action="processsearch" method="post" enctype="multipart/form-data">
+
+            <p>Restaurant_id</p>
+            <input class="w3-input w3-border" type="text" name="rid">
+            <p>Name</p>
+            <input class="w3-input w3-border" input type="text" name="name">
+            <p>Cuisine</p>
+            <input class="w3-input w3-border" type="text" name="cuisine">
+            <p>Address</p>
+            <p>Street</p>
+            <input class="w3-input w3-border" type="text" name="street">
+            <p>Building</p>
+            <input class="w3-input w3-border" type="text" name="building">
+            <p>Zipcode</p>
+            <input class="w3-input w3-border" type="text" name="zipcode">
+            <p>GPS Coordinates (lon.)</p>
+            <input class="w3-input w3-border" type="number" step="any" name="coordlon">
+            <p> GPS Coordinates (lat.)</p>
+            <input class="w3-input w3-border" input type="number" step="any" name="coordlat">
+            <p>Owner</p>
+            <input class="w3-input w3-border" type="text" name="owner">
+            <button class="w3-button w3-black w3-section" type="submit" value="Search">
+                <i class="fa fa-paper-plane"></i> Search
+            </button>
+        </form>
+    </div>
+
+    <!-- 
         <form action="processsearch" method="post" enctype="multipart/form-data">
         Restaurant_id: <input type="text" name="rid" ><br>
         Name: <input type="text" name="name"><br>
@@ -19,5 +69,8 @@
         Owner: <input type="text" name="owner"  ><br>
         <input type="submit">
         </form>
-        </body></html>    
-        
+-->
+
+</body>
+
+</html>

@@ -1,19 +1,67 @@
 <html>
-  <head><title>Search Result</title></head> 
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+  <title>Search Result</title>
+</head>
+
+
 <body>
-  <H1>Search Result</H1> 
+  <div class="w3-content w3-padding" style="max-width:1564px">
+    <div class="w3-top">
+      <div class="w3-bar w3-white w3-wide w3-padding w3-card">
+        <a href="#home" class="w3-bar-item w3-button"><b>
+            <h1>Restaurants</h1>
+          </b></a>
+        <!-- Float links to the right. Hide them on small screens -->
+        <div class="w3-right w3-hide-small">
+          <a href="/read" class="w3-bar-item w3-button">Go Back</a>
+          <a href="/logout" class="w3-bar-item w3-button">Logout</a>
+        </div>
+      </div>
+    </div>
+
+
+
+    </br></br></br></br>
+
+
+    <div class="w3-container w3-padding-32" id="about">
+      <h3>Search Result</h3>
+    </div>
+
+
+    <div class="w3-row-padding w3-grayscale">
+      <div class="w3-col l3 m6 w3-margin-bottom">
+        <% if (p.length !=0) {%>
+        <ol>
+          <% for (var i in p) { %>
+          <li><a href='/display?_id=<%= p[i]._id %>'><%= p[i].name %></a></li>
+          <% } %>
+        </ol> <%} else { %>
+        <h1>restaurant with following criteria not found!!!</h1>
+        <p><%=c%></p>
+        <%}%>
+
+        </div>
+
+    </div>
+</div>
+
+<!--
+
   <% if (p.length !=0) {%>
-<H2>Showing <%= p.length %> restaurant(s)</H2> 
-<ol> 
-<% for (var i in p) { %>
-  <li><a href='/display?_id=<%= p[i]._id %>'><%= p[i].name %></a></li> 
-<% } %>
-</ol> <%} else { %>
-  <h1>restaurant with following criteria not found!!!</h1>
-  <p><%=c%></p>
-  <%}%>
-<a href="/read">
-  <button class="btn btn-default">Go Back</button>
-  </a>
+        <ol>
+          <% for (var i in p) { %>
+          <li><a href='/display?_id=<%= p[i]._id %>'><%= p[i].name %></a></li>
+          <% } %>
+        </ol> <%} else { %>
+        <h1>restaurant with following criteria not found!!!</h1>
+        <p><%=c%></p>
+        <%}%>
+
+-->
 </body>
 </html> 

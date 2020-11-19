@@ -1,14 +1,38 @@
-
 <!DOCTYPE html>
 <html>
-    <title>Create user account</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-<body> 
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<title>Create user account</title>
+
+<body>
+    <div class="w3-top">
+        <div class="w3-bar w3-white w3-wide w3-padding w3-card">
+            <a href="/" class="w3-bar-item w3-button"><b>
+                    <h1>Home</h1>
+                </b></a>
+
+            <div class="w3-right w3-hide-small">
+                <a href="/createAC" class="w3-bar-item w3-button">Create User Account</a>
+            </div>
+        </div>
+    </div>
+
+
+
+    <div class="w3-container w3-padding-32" id="projects">
+
+        <h3 class="w3-border-bottom w3-border-light-grey w3-padding-16">Login</h3>
+        <p>Create a new accout for more services.</p>
         <form action="/processcreateac" method="post">
-            Set User ID:<input type="text" name="userid" required><br>
-            Set Password:<input type="password" name="pw" ><br><br>
-            <input type="submit" value="Submit">
+            <input class="w3-input w3-border" placeholder="Set User ID:" name="userid" type="text" required>
+            <input class="w3-input w3-section w3-border" placeholder="Set Password:" name="pw" type="password">
+            <button class="w3-button w3-black w3-section" type="submit" value="Submit">
+                <i class="fa fa-paper-plane"></i> Submit
+            </button>
         </form>
-    </body>
-</html>    
-    
+    </div>
+
+
+</body>
+
+</html>
